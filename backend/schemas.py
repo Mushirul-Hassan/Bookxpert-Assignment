@@ -86,3 +86,7 @@ class OrderOut(BaseModel):
     items: list[OrderItemOut]
 
     model_config = {"from_attributes": True}
+
+
+class DecisionIn(BaseModel):
+    remarks: str | None = Field(default=None, max_length=500)

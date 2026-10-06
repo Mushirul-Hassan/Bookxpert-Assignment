@@ -74,7 +74,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import models  # noqa: F401  (makes sure all tables are registered)
 from database import Base, engine
-from routers import auth_routes, customers, products, orders
+from routers import approvals, auth_routes, customers, products, orders
 
 Base.metadata.create_all(bind=engine)
 
@@ -92,3 +92,4 @@ app.include_router(auth_routes.router)
 app.include_router(products.router)
 app.include_router(customers.router)
 app.include_router(orders.router)
+app.include_router(approvals.router)
