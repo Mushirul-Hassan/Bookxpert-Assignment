@@ -27,7 +27,7 @@ export default function Layout() {
           <div className="font-serif text-lg font-bold leading-tight">
             Sales & Inventory
           </div>
-          <div className="font-mono text-[11px] uppercase tracking-wider text-white/60">
+          <div className="font-mono text-[11px] text-white/60">
             Management system
           </div>
         </div>
@@ -42,7 +42,7 @@ export default function Layout() {
 
         <div className="mt-auto rounded-lg bg-white/10 p-3">
           <div className="text-sm font-medium">{user?.name}</div>
-          <div className="mb-2 font-mono text-[11px] uppercase tracking-wider text-white/70">
+          <div className="mb-2 font-mono text-[11px] text-white/70">
             {user?.role}
           </div>
           <button
@@ -62,3 +62,65 @@ export default function Layout() {
     </div>
   );
 }
+
+
+
+// import { NavLink, Outlet } from "react-router-dom";
+// import { useAuth } from "./AuthContext";
+
+// function Item({ to, end, children }) {
+//   return (
+//     <NavLink
+//       to={to}
+//       end={end}
+//       className={({ isActive }) =>
+//         `block rounded-md px-3 py-2 text-sm ${
+//           isActive
+//             ? "bg-brand/10 font-semibold text-brand-dark"
+//             : "text-ink/75 hover:bg-page"
+//         }`
+//       }
+//     >
+//       {children}
+//     </NavLink>
+//   );
+// }
+
+// export default function Layout() {
+//   const { user, logout, isManager } = useAuth();
+
+//   return (
+//     <div className="flex min-h-screen">
+//       <aside className="fixed inset-y-0 left-0 flex w-56 flex-col border-r border-line bg-white p-3">
+//         <div className="mb-4 px-3 py-2 text-base font-semibold">
+//           Sales & Inventory
+//         </div>
+
+//         <nav className="space-y-1">
+//           <Item to="/" end>Dashboard</Item>
+//           <Item to="/products">Products</Item>
+//           <Item to="/customers">Customers</Item>
+//           <Item to="/orders">Orders</Item>
+//           {isManager && <Item to="/approvals">Approvals</Item>}
+//         </nav>
+
+//         <div className="mt-auto border-t border-line px-3 pt-3">
+//           <div className="text-sm font-medium">{user?.name}</div>
+//           <div className="text-xs capitalize text-muted">{user?.role}</div>
+//           <button
+//             onClick={logout}
+//             className="mt-2 text-sm text-muted hover:text-ink"
+//           >
+//             Log out
+//           </button>
+//         </div>
+//       </aside>
+
+//       <main className="ml-56 flex-1 p-8">
+//         <div className="mx-auto max-w-6xl">
+//           <Outlet />
+//         </div>
+//       </main>
+//     </div>
+//   );
+// }

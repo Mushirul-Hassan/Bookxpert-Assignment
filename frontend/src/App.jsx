@@ -1,15 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Layout from "./Layout";
+import Approvals from "./pages/Approvals";
 import Customers from "./pages/Customers";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import NewOrder from "./pages/NewOrder";
+import Orders from "./pages/Orders";
 import Products from "./pages/Products";
 import Register from "./pages/Register";
-
-const Soon = ({ title }) => (
-  <h1 className="font-serif text-2xl font-bold">{title}</h1>
-);
 
 function Protected({ children, managerOnly = false }) {
   const { user, isManager } = useAuth();
@@ -33,12 +32,13 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
         <Route path="/customers" element={<Customers />} />
-        <Route path="/orders" element={<Soon title="Orders" />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/orders/new" element={<NewOrder />} />
         <Route
           path="/approvals"
           element={
             <Protected managerOnly>
-              <Soon title="Approvals" />
+              <Approvals />
             </Protected>
           }
         />
