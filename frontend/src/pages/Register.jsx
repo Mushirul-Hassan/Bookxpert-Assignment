@@ -1,27 +1,28 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
+import api, { errorMessage } from "../api";
 import { useAuth } from "../AuthContext";
-import { errorMessage } from "../api";
 import { inputCls, labelCls } from "../ui";
 
-export default function Login() {
+export default function Register() {
   const { user, login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", password: "", role: "user" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (user) return <Navigate to="/" replace />;
+
+  const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
 
   const submit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      await login(email, password);
+      await api.post("/register", form);
+      await login(form.email, form.password); 
     } catch (err) {
       setError(errorMessage(err));
-    } finally {
       setLoading(false);
     }
   };
@@ -29,17 +30,28 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-page px-4">
       <div className="w-full max-w-md rounded-xl border border-line bg-white p-8">
-        <h1 className="font-serif text-2xl font-bold">Sign in</h1>
+        <h1 className="font-serif text-2xl font-bold">Create account</h1>
         <p className="mt-1 text-sm text-muted">Sales & Inventory Management</p>
 
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div>
-            <label className={labelCls}>Email</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputCls} />
+            <label className={labelCls}>Name</label>
+            <input required className={inputCls} value={form.name} onChange={set("name")} />
           </div>
           <div>
-            <label className={labelCls}>Password</label>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} />
+            <label className={labelCls}>Email</label>
+            <input required type="email" className={inputCls} value={form.email} onChange={set("email")} />
+          </div>
+          <div>
+            <label className={labelCls}>Password (min 6 characters)</label>
+            <input required type="password" minLength={6} maxLength={72} className={inputCls} value={form.password} onChange={set("password")} />
+          </div>
+          <div>
+            <label className={labelCls}>Role (open for demo testing)</label>
+            <select className={inputCls} value={form.role} onChange={set("role")}>
+              <option value="user">User</option>
+              <option value="manager">Manager</option>
+            </select>
           </div>
 
           {error && (
@@ -51,13 +63,13 @@ export default function Login() {
             disabled={loading}
             className="w-full rounded-lg bg-brand py-2.5 font-medium text-white hover:bg-brand-dark disabled:opacity-60"
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Creating..." : "Create account"}
           </button>
         </form>
 
         <p className="mt-5 text-center text-sm text-muted">
-          New here?{" "}
-          <Link to="/register" className="text-brand hover:underline">Create an account</Link>
+          Already have an account?{" "}
+          <Link to="/login" className="text-brand hover:underline">Sign in</Link>
         </p>
       </div>
     </div>

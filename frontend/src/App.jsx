@@ -1,7 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Layout from "./Layout";
+import Customers from "./pages/Customers";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Products from "./pages/Products";
+import Register from "./pages/Register";
 
 const Soon = ({ title }) => (
   <h1 className="font-serif text-2xl font-bold">{title}</h1>
@@ -18,6 +22,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         element={
           <Protected>
@@ -25,9 +30,9 @@ export default function App() {
           </Protected>
         }
       >
-        <Route path="/" element={<Soon title="Dashboard" />} />
-        <Route path="/products" element={<Soon title="Products" />} />
-        <Route path="/customers" element={<Soon title="Customers" />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/customers" element={<Customers />} />
         <Route path="/orders" element={<Soon title="Orders" />} />
         <Route
           path="/approvals"
