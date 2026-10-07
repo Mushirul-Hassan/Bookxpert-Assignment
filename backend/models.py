@@ -5,7 +5,6 @@ from sqlalchemy.orm import relationship
 
 from database import Base
 
-# order statuses
 PENDING = "PENDING_APPROVAL"
 COMPLETED = "COMPLETED"
 REJECTED = "REJECTED"
@@ -63,7 +62,7 @@ class OrderItem(Base):
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
-    unit_price = Column(Numeric(12, 2), nullable=False)  # price at time of order
+    unit_price = Column(Numeric(12, 2), nullable=False)  
     line_total = Column(Numeric(12, 2), nullable=False)
 
     order = relationship("Order", back_populates="items")
@@ -76,7 +75,7 @@ class Approval(Base):
     id = Column(Integer, primary_key=True)
     order_id = Column(Integer, ForeignKey("orders.id"), unique=True, nullable=False)
     manager_id = Column(Integer, ForeignKey("users.id"))
-    decision = Column(String(20))  # APPROVED / REJECTED, empty until decided
+    decision = Column(String(20)) 
     remarks = Column(Text)
     decided_at = Column(DateTime)
 
@@ -89,6 +88,6 @@ class InventoryMovement(Base):
     id = Column(Integer, primary_key=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     order_id = Column(Integer, ForeignKey("orders.id"))
-    change = Column(Integer, nullable=False)  # negative = stock went out
+    change = Column(Integer, nullable=False)  
     reason = Column(String(50), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

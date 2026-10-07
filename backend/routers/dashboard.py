@@ -17,12 +17,12 @@ def dashboard(
     db: Session = Depends(get_db),
     user: models.User = Depends(get_current_user),
 ):
-    # manager sees all orders, a normal user sees only their own
+    
     orders = db.query(models.Order)
     if user.role != "manager":
         orders = orders.filter(models.Order.created_by == user.id)
 
-    # orders count by status
+    
     counts = {models.PENDING: 0, models.COMPLETED: 0, models.REJECTED: 0}
     rows = (
         orders.with_entities(models.Order.status, func.count(models.Order.id))
@@ -32,14 +32,14 @@ def dashboard(
     for status, count in rows:
         counts[status] = count
 
-    # total sales = sum of completed orders only
+    
     total_sales = (
         orders.filter(models.Order.status == models.COMPLETED)
         .with_entities(func.coalesce(func.sum(models.Order.total_amount), 0))
         .scalar()
     )
 
-    # sales per day for the last 7 days
+    
     since = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=6)
     day = func.date(models.Order.created_at)
     daily_rows = (
@@ -54,7 +54,7 @@ def dashboard(
     )
     daily_sales = [{"date": str(d), "total": float(t)} for d, t in daily_rows]
 
-    # inventory summary (same for everyone)
+    
     total_products = db.query(func.count(models.Product.id)).scalar()
     total_units = db.query(func.coalesce(func.sum(models.Product.stock), 0)).scalar()
     low_stock = (

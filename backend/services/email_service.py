@@ -15,7 +15,7 @@ SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 
 def send_email(to: list[str], subject: str, body: str) -> None:
-    # SMTP not configured: print instead, so development is never blocked
+
     if not SMTP_USER or not SMTP_PASSWORD:
         print(f"\n--- EMAIL (not sent, SMTP not configured) ---\nTo: {to}\nSubject: {subject}\n{body}\n")
         return
@@ -26,7 +26,7 @@ def send_email(to: list[str], subject: str, body: str) -> None:
     msg["Subject"] = subject
     msg.set_content(body)
 
-    # an email failure must never break the order, so we only log it
+
     try:
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as server:
             server.starttls()

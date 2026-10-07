@@ -6,7 +6,12 @@ import { inputCls, labelCls } from "../ui";
 
 export default function Register() {
   const { user, login } = useAuth();
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "user" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +25,7 @@ export default function Register() {
     setLoading(true);
     try {
       await api.post("/register", form);
-      await login(form.email, form.password); 
+      await login(form.email, form.password);
     } catch (err) {
       setError(errorMessage(err));
       setLoading(false);
@@ -36,26 +41,51 @@ export default function Register() {
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div>
             <label className={labelCls}>Name</label>
-            <input required className={inputCls} value={form.name} onChange={set("name")} />
+            <input
+              required
+              className={inputCls}
+              value={form.name}
+              onChange={set("name")}
+            />
           </div>
           <div>
             <label className={labelCls}>Email</label>
-            <input required type="email" className={inputCls} value={form.email} onChange={set("email")} />
+            <input
+              required
+              type="email"
+              className={inputCls}
+              value={form.email}
+              onChange={set("email")}
+            />
           </div>
           <div>
             <label className={labelCls}>Password (min 6 characters)</label>
-            <input required type="password" minLength={6} maxLength={72} className={inputCls} value={form.password} onChange={set("password")} />
+            <input
+              required
+              type="password"
+              minLength={6}
+              maxLength={72}
+              className={inputCls}
+              value={form.password}
+              onChange={set("password")}
+            />
           </div>
           <div>
             <label className={labelCls}>Role (open for demo testing)</label>
-            <select className={inputCls} value={form.role} onChange={set("role")}>
+            <select
+              className={inputCls}
+              value={form.role}
+              onChange={set("role")}
+            >
               <option value="user">User</option>
               <option value="manager">Manager</option>
             </select>
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
           )}
 
           <button
@@ -69,7 +99,9 @@ export default function Register() {
 
         <p className="mt-5 text-center text-sm text-muted">
           Already have an account?{" "}
-          <Link to="/login" className="text-brand hover:underline">Sign in</Link>
+          <Link to="/login" className="text-brand hover:underline">
+            Sign in
+          </Link>
         </p>
       </div>
     </div>

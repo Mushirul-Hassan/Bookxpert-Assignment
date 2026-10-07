@@ -35,15 +35,30 @@ export default function Login() {
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div>
             <label className={labelCls}>Email</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputCls} />
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              className={inputCls}
+            />
           </div>
           <div>
             <label className={labelCls}>Password</label>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} />
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={inputCls}
+            />
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
           )}
 
           <button
@@ -57,7 +72,9 @@ export default function Login() {
 
         <p className="mt-5 text-center text-sm text-muted">
           New here?{" "}
-          <Link to="/register" className="text-brand hover:underline">Create an account</Link>
+          <Link to="/register" className="text-brand hover:underline">
+            Create an account
+          </Link>
         </p>
       </div>
     </div>

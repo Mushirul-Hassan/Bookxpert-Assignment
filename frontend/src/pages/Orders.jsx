@@ -38,7 +38,6 @@ export default function Orders() {
       .finally(() => setLoading(false));
   }, []);
 
-  // so the message doesn't come back after a page refresh
   useEffect(() => {
     if (flash) window.history.replaceState({}, "");
   }, [flash]);

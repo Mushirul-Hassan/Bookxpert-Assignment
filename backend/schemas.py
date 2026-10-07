@@ -103,36 +103,3 @@ class DecisionIn(BaseModel):
     remarks: str | None = Field(default=None, max_length=500)
 
     
-# # ---------- orders ----------
-# class OrderItemIn(BaseModel):
-#     product_id: int
-#     quantity: int = Field(gt=0)
-
-
-# class OrderCreate(BaseModel):
-#     customer_id: int
-#     items: list[OrderItemIn] = Field(min_length=1)
-
-
-# class OrderItemOut(BaseModel):
-#     product_id: int
-#     quantity: int
-#     unit_price: float
-#     line_total: float
-
-#     model_config = {"from_attributes": True}
-
-
-# class OrderOut(BaseModel):
-#     id: int
-#     customer_id: int
-#     total_amount: float
-#     status: str
-#     created_at: datetime
-#     items: list[OrderItemOut]
-
-#     model_config = {"from_attributes": True}
-
-
-# class DecisionIn(BaseModel):
-#     remarks: str | None = Field(default=None, max_length=500)

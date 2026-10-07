@@ -7,7 +7,7 @@ import models
 
 
 def _get_pending_order(db: Session, order_id: int) -> models.Order:
-    # lock the order row so two managers can't decide the same order at once
+    
     order = (
         db.query(models.Order)
         .filter(models.Order.id == order_id)
@@ -38,8 +38,7 @@ def approve_order(db: Session, order_id: int, manager: models.User, remarks):
     try:
         order = _get_pending_order(db, order_id)
 
-        # stock is checked AGAIN here, because it may have changed
-        # while the order was waiting for approval
+       
         for item in sorted(order.items, key=lambda i: i.product_id):
             product = (
                 db.query(models.Product)
@@ -66,7 +65,7 @@ def approve_order(db: Session, order_id: int, manager: models.User, remarks):
         order.status = models.COMPLETED
         _record_decision(db, order, manager, "APPROVED", remarks)
 
-        db.commit()  # stock + status + approval saved together, or nothing
+        db.commit()  
         db.refresh(order)
         return order
     except Exception:
@@ -77,7 +76,7 @@ def approve_order(db: Session, order_id: int, manager: models.User, remarks):
 def reject_order(db: Session, order_id: int, manager: models.User, remarks):
     try:
         order = _get_pending_order(db, order_id)
-        order.status = models.REJECTED  # stock was never deducted, so nothing to restore
+        order.status = models.REJECTED  
         _record_decision(db, order, manager, "REJECTED", remarks)
         db.commit()
         db.refresh(order)

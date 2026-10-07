@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import api, { errorMessage } from "../api";
 import {
-  Alert, Card, PageHeader, StatusBadge, fmtDate, money, tdCls, thCls,
+  Alert,
+  Card,
+  PageHeader,
+  StatusBadge,
+  fmtDate,
+  money,
+  tdCls,
+  thCls,
 } from "../ui";
 
 function Stat({ label, value, note }) {
@@ -35,10 +42,26 @@ export default function Dashboard() {
       <PageHeader title="Dashboard" subtitle="Overview" />
 
       <div className="grid grid-cols-4 gap-4">
-        <Stat label="Total sales" value={money(sales.total_sales)} note="From completed orders" />
-        <Stat label="Pending approvals" value={orders.pending_approval} note="Waiting for a manager" />
-        <Stat label="Completed orders" value={orders.completed} note={`${orders.total} orders in total`} />
-        <Stat label="Products" value={inventory.total_products} note={`${inventory.total_units} units in stock`} />
+        <Stat
+          label="Total sales"
+          value={money(sales.total_sales)}
+          note="From completed orders"
+        />
+        <Stat
+          label="Pending approvals"
+          value={orders.pending_approval}
+          note="Waiting for a manager"
+        />
+        <Stat
+          label="Completed orders"
+          value={orders.completed}
+          note={`${orders.total} orders in total`}
+        />
+        <Stat
+          label="Products"
+          value={inventory.total_products}
+          note={`${inventory.total_units} units in stock`}
+        />
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-4">
@@ -62,8 +85,12 @@ export default function Dashboard() {
                   <td className={`${tdCls} font-mono`}>#{o.id}</td>
                   <td className={tdCls}>{o.customer}</td>
                   <td className={`${tdCls} text-right`}>{money(o.total)}</td>
-                  <td className={tdCls}><StatusBadge status={o.status} /></td>
-                  <td className={`${tdCls} text-muted`}>{fmtDate(o.created_at)}</td>
+                  <td className={tdCls}>
+                    <StatusBadge status={o.status} />
+                  </td>
+                  <td className={`${tdCls} text-muted`}>
+                    {fmtDate(o.created_at)}
+                  </td>
                 </tr>
               ))}
               {recent_orders.length === 0 && (
@@ -83,13 +110,18 @@ export default function Dashboard() {
           </div>
           <ul>
             {inventory.low_stock.map((p) => (
-              <li key={p.id} className="flex justify-between border-b border-line px-4 py-3 last:border-0">
+              <li
+                key={p.id}
+                className="flex justify-between border-b border-line px-4 py-3 last:border-0"
+              >
                 <span>{p.name}</span>
                 <span className="font-medium text-red-600">{p.stock} left</span>
               </li>
             ))}
             {inventory.low_stock.length === 0 && (
-              <li className="px-4 py-6 text-center text-muted">All products well stocked</li>
+              <li className="px-4 py-6 text-center text-muted">
+                All products well stocked
+              </li>
             )}
           </ul>
         </Card>

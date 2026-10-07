@@ -12,7 +12,7 @@ def create_order(db: Session, data, user: models.User) -> models.Order:
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
 
-    # if the same product is sent twice, merge the quantities
+    
     wanted: dict[int, int] = {}
     for item in data.items:
         wanted[item.product_id] = wanted.get(item.product_id, 0) + item.quantity
@@ -27,15 +27,15 @@ def create_order(db: Session, data, user: models.User) -> models.Order:
         db.add(order)
 
         total = Decimal("0")
-        locked = []  # (product, qty) pairs
+        locked = []  
 
-        # sorted ids = rows are always locked in the same order (avoids deadlocks)
+        
         for product_id in sorted(wanted):
             qty = wanted[product_id]
             product = (
                 db.query(models.Product)
                 .filter(models.Product.id == product_id)
-                .with_for_update()  # locks this row on MySQL until commit
+                .with_for_update()  
                 .first()
             )
             if not product:
@@ -60,14 +60,14 @@ def create_order(db: Session, data, user: models.User) -> models.Order:
             locked.append((product, qty))
 
         order.total_amount = total
-        db.flush()  # gives the order an id without committing yet
+        db.flush()  
 
         if total > APPROVAL_THRESHOLD:
-            # big order: wait for manager, stock is NOT deducted yet
+        
             order.status = models.PENDING
             db.add(models.Approval(order_id=order.id))
         else:
-            # small order: complete now, deduct stock in the same transaction
+        
             for product, qty in locked:
                 product.stock -= qty
                 db.add(
@@ -80,9 +80,9 @@ def create_order(db: Session, data, user: models.User) -> models.Order:
                 )
             order.status = models.COMPLETED
 
-        db.commit()  # everything above is saved together, or nothing is
+        db.commit()  
         db.refresh(order)
         return order
     except Exception:
-        db.rollback()  # any error undoes the whole thing
+        db.rollback()  
         raise
