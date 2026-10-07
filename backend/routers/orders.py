@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 import models
 from auth import get_current_user
 from database import get_db
 from schemas import OrderCreate, OrderOut
-from services import order_service
+from services import email_service, order_service
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -13,10 +13,26 @@ router = APIRouter(prefix="/orders", tags=["Orders"])
 @router.post("", response_model=OrderOut)
 def create_order(
     data: OrderCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user: models.User = Depends(get_current_user),
 ):
-    return order_service.create_order(db, data, user)
+    order = order_service.create_order(db, data, user)
+
+    if order.status == models.PENDING:
+        managers = db.query(models.User).filter(models.User.role == "manager").all()
+        emails = [m.email for m in managers]
+        if emails:
+            # runs AFTER the response is sent, so the user doesn't wait for SMTP
+            background_tasks.add_task(
+                email_service.notify_managers_approval_required,
+                emails,
+                order.id,
+                order.customer.name,
+                str(order.total_amount),
+                user.name,
+            )
+    return order
 
 
 @router.get("", response_model=list[OrderOut])
@@ -25,7 +41,7 @@ def list_orders(
     user: models.User = Depends(get_current_user),
 ):
     query = db.query(models.Order)
-    if user.role != "manager":  # normal users only see their own orders
+    if user.role != "manager":
         query = query.filter(models.Order.created_by == user.id)
     return query.order_by(models.Order.id.desc()).all()
 
