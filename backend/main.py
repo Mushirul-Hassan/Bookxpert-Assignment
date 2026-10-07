@@ -74,13 +74,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import models  # noqa: F401  (makes sure all tables are registered)
 from database import Base, engine
-from routers import approvals, auth_routes, customers, products, orders
+from routers import approvals, auth_routes, customers, dashboard, products, orders
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Sales & Inventory Management")
 
-# lets your React app (Vite runs on 5173) call this API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -93,4 +92,5 @@ app.include_router(products.router)
 app.include_router(customers.router)
 app.include_router(orders.router)
 app.include_router(approvals.router)
+app.include_router(dashboard.router)
 
